@@ -1,8 +1,6 @@
 package com.mycompany.gestionstock.gestionDeStock.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.Generated;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,17 +14,17 @@ import java.time.Instant;
 @EntityListeners(AuditingEntityListener.class)
 public class AbstractEntity implements Serializable {
 
-    @Id
-    @GeneratedValue
-    private Integer Id;
+  @Id
+  @GeneratedValue
+  private Integer id;
 
-    @CreatedDate
-    @Column(name="createDate", nullable = false)
-    @JsonIgnore
-    private Instant creattionDate;
+  @CreatedDate
+  @Column(name = "creationDate", nullable = false, updatable = false)
+  private Instant creationDate;
 
-    @LastModifiedDate
-    @Column(name="lastModifyDate")
-    @JsonIgnore
-    private Instant lastModifyDate;
+  @LastModifiedDate
+  @Column(name = "lastModifiedDate")
+  private Instant lastModifiedDate;
+
+
 }
