@@ -1,6 +1,6 @@
 package com.mycompany.gestionstock.gestionDeStock.model;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
