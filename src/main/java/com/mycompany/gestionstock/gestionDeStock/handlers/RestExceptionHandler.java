@@ -1,6 +1,7 @@
 package com.mycompany.gestionstock.gestionDeStock.handlers;
 
 import com.mycompany.gestionstock.gestionDeStock.exception.EntityNotFoundException;
+import com.mycompany.gestionstock.gestionDeStock.exception.InvalidEntityException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,7 +25,19 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDto, notFound);
     }
 
-    
+    @ExceptionHandler(InvalidEntityException.class)
+    public ResponseEntity<ErrorDto> handleException(InvalidEntityException exception, WebRequest webRequest) {
+        final HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+
+        final ErrorDto errorDto = ErrorDto.builder()
+                .code(exception.getErrorsCodes())
+                .httpCode(badRequest.value())
+                .message(exception.getMessage())
+                .errors(exception.getErrors())
+                .build();
+
+        return new ResponseEntity<>(errorDto, badRequest);
+    }
 
 
 
