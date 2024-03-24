@@ -32,6 +32,7 @@ public class CommandeFournisseurDto {
     if (commandeFournisseur == null) {
       return null;
     }
+
     return CommandeFournisseurDto.builder()
             .id(commandeFournisseur.getId())
             .code(commandeFournisseur.getCode())
