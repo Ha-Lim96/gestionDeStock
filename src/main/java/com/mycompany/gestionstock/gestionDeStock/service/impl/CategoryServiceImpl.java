@@ -26,12 +26,11 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ArticleRepository articleRepository;
 
+    @Autowired
     public CategoryServiceImpl(CategoryRepository categoryRepository, ArticleRepository articleRepository) {
         this.categoryRepository = categoryRepository;
         this.articleRepository = articleRepository;
     }
-
-    @Autowired
 
 
     public CategoryDto save(CategoryDto dto) {
