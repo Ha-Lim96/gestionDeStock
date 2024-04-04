@@ -18,6 +18,7 @@ public class ArticleController implements ArticleApi {
         this.articleService = articleService;
     }
 
+
     public ArticleDto save(ArticleDto dto) {
         return articleService.save(dto);
     }
@@ -41,4 +42,5 @@ public class ArticleController implements ArticleApi {
     public void delete(Integer id) {
         articleService.delete(id);
     }
+
 }
