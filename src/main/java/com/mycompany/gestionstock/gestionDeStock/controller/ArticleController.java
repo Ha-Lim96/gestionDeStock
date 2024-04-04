@@ -18,12 +18,12 @@ public class ArticleController implements ArticleApi {
         this.articleService = articleService;
     }
 
-
+    @Override
     public ArticleDto save(ArticleDto dto) {
         return articleService.save(dto);
     }
 
-
+    @Override
     public ArticleDto findById(Integer id) {
         return articleService.findById(id);
     }
