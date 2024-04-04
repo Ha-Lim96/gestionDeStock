@@ -4,7 +4,10 @@ import com.mycompany.gestionstock.gestionDeStock.dto.ClientDto;
 
 import java.util.List;
 
+
+
 public interface ClientService {
+
 
     ClientDto save(ClientDto dto);
 
