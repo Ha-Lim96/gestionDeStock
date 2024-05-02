@@ -7,4 +7,5 @@ public interface Constants {
     String FOURNISSEUR_ENDPOINT = APP_ROOT + "/commandesfournisseurs";
 
 
+
 }
