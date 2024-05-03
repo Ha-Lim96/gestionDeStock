@@ -1,5 +1,6 @@
 package com.mycompany.gestionstock.gestionDeStock.dto.auth;
 
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -7,8 +8,8 @@ import lombok.Data;
 @Builder
 public class AuthenticationRequest {
 
-    // les crédentials
     private String login;
 
     private String password;
+
 }

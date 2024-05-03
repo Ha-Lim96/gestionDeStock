@@ -7,8 +7,6 @@ import lombok.Data;
 @Builder
 public class AuthenticationResponse {
 
-    // data envoyé comme réponse
     private String accessToken;
-
 
 }
