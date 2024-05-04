@@ -1,5 +1,6 @@
 package com.mycompany.gestionstock.gestionDeStock.utils;
 
+import com.mycompany.gestionstock.gestionDeStock.model.auth.ExtendedUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -42,16 +43,18 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(ExtendedUser userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
+        return createToken(claims, userDetails);
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    private String createToken(Map<String, Object> claims, ExtendedUser userDetails) {
 
         return Jwts.builder().setClaims(claims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .claim("idEntreprise", "")
+                .claim("idEntreprise", userDetails.getIdEntreprise().toString())
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 

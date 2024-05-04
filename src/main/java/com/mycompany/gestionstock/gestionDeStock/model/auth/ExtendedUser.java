@@ -1,5 +1,5 @@
 package com.mycompany.gestionstock.gestionDeStock.model.auth;
-/*
+
 import java.util.Collection;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +22,7 @@ public class ExtendedUser extends User {
         super(username, password, authorities);
         this.idEntreprise = idEntreprise;
     }
+
 }
 
 
- */

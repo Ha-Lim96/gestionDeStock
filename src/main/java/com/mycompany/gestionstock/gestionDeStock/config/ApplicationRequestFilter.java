@@ -2,6 +2,8 @@ package com.mycompany.gestionstock.gestionDeStock.config;
 
 import com.mycompany.gestionstock.gestionDeStock.service.auth.ApplicationUserDetailsService;
 import com.mycompany.gestionstock.gestionDeStock.utils.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class ApplicationRequestFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -30,16 +33,18 @@ public class ApplicationRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
-        String userName = null;
+        String userEmail = null;
         String jwt = null;
+        String idEntreprise = null;
 
-        if(StringUtils.hasLength(authHeader) && authHeader.startsWith("Bearer ")) {
+        if(authHeader != null && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
-            userName = jwtUtil.extractUsername(jwt);
+            userEmail = jwtUtil.extractUsername(jwt);
+            idEntreprise = jwtUtil.extractIdEntreprise(jwt);
         }
 
-        if (StringUtils.hasLength(userName) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+        if (StringUtils.hasLength(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
             if (jwtUtil.validateToken(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
@@ -50,6 +55,7 @@ public class ApplicationRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
+        MDC.put("idEntreprise",idEntreprise);
         chain.doFilter(request, response);
     }
 }

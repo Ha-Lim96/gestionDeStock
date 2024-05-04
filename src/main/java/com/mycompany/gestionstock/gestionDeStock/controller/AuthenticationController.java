@@ -2,6 +2,7 @@ package com.mycompany.gestionstock.gestionDeStock.controller;
 
 import com.mycompany.gestionstock.gestionDeStock.dto.auth.AuthenticationRequest;
 import com.mycompany.gestionstock.gestionDeStock.dto.auth.AuthenticationResponse;
+import com.mycompany.gestionstock.gestionDeStock.model.auth.ExtendedUser;
 import com.mycompany.gestionstock.gestionDeStock.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +34,18 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+        // vérifie l'existance des credentials dans BDD
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getLogin(),
                         request.getPassword()
                 )
         );
-
+        // charger l'utilisateur
         final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getLogin());
 
-        final String jwt = jwtUtil.generateToken(userDetails);
+        // génération du Token
+        final String jwt = jwtUtil.generateToken((ExtendedUser) userDetails);
 
         return ResponseEntity.ok(AuthenticationResponse.builder().accessToken(jwt).build());
     }

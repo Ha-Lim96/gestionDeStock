@@ -1,6 +1,8 @@
 package com.mycompany.gestionstock.gestionDeStock.service.impl;
 
 import com.mycompany.gestionstock.gestionDeStock.dto.EntrepriseDto;
+import com.mycompany.gestionstock.gestionDeStock.dto.RolesDto;
+import com.mycompany.gestionstock.gestionDeStock.dto.UtilisateurDto;
 import com.mycompany.gestionstock.gestionDeStock.exception.EntityNotFoundException;
 import com.mycompany.gestionstock.gestionDeStock.exception.ErrorsCodes;
 import com.mycompany.gestionstock.gestionDeStock.exception.InvalidEntityException;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,8 @@ public class EntrepriseServiceImpl implements EntrepriseService {
 
 
     private EntrepriseRepository entrepriseRepository;
+    private UtilisateurService utilisateurService;
+    private RolesRepository rolesRepository;
 
 
 
@@ -38,9 +43,41 @@ public class EntrepriseServiceImpl implements EntrepriseService {
             log.error("Entreprise is not valid {}", dto);
             throw new InvalidEntityException("L'entreprise n'est pas valide", ErrorsCodes.ENTREPRISE_NOT_VALID, errors);
         }
+        EntrepriseDto savedEntreprise = EntrepriseDto.fromEntity(
+                entrepriseRepository.save(EntrepriseDto.toEntity(dto))
+        );
 
-        return EntrepriseDto.fromEntity(entrepriseRepository.save(EntrepriseDto.toEntity(dto)));
+        UtilisateurDto utilisateur = fromEntreprise(savedEntreprise);
+
+        UtilisateurDto savedUser = utilisateurService.save(utilisateur);
+
+        RolesDto rolesDto = RolesDto.builder()
+                .roleName("ADMIN")
+                .utilisateur(savedUser)
+                .build();
+
+        rolesRepository.save(RolesDto.toEntity(rolesDto));
+
+        return  savedEntreprise;
     }
+
+    private UtilisateurDto fromEntreprise(EntrepriseDto dto) {
+        return UtilisateurDto.builder()
+                .adresse(dto.getAdresse())
+                .nom(dto.getNom())
+                .prenom(dto.getCodeFiscal())
+                .email(dto.getEmail())
+                .moteDePasse(generateRandomPassword())
+                .entreprise(dto)
+                .dateDeNaissance(Instant.now())
+                .photo(dto.getPhoto())
+                .build();
+    }
+
+    private String generateRandomPassword() {
+        return "som3R@nd0mP@$$word";
+    }
+
 
     @Override
     public EntrepriseDto findById(Integer id) {
